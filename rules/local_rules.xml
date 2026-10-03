@@ -1,0 +1,15 @@
+<!-- Regles personnalisees du mini-SOC (Wazuh 4.14, /var/ossec/etc/rules/local_rules.xml) -->
+
+<group name="local,sysmon,persistence,">
+  <!-- T1053.005 : la regle native 92032 (niveau 3) ne voit que "cmd lance un binaire".
+       Celle-ci qualifie precisement la creation d'une tache planifiee. -->
+  <rule id="100100" level="10">
+    <if_sid>61603, 92032</if_sid>
+    <field name="win.eventdata.image" type="pcre2">(?i)schtasks\.exe$</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)/create</field>
+    <description>Persistance : tache planifiee creee avec schtasks par $(win.eventdata.user)</description>
+    <mitre>
+      <id>T1053.005</id>
+    </mitre>
+  </rule>
+</group>

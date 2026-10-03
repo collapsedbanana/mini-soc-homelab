@@ -1,0 +1,485 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --navy: #14294a;
+  --navy-2: #1f3a5f;
+  --teal: #0f7c80;
+  --ink: #1b2430;
+  --muted: #5b6676;
+  --line: #d9dee6;
+  --soft: #f3f5f8;
+  --blue-bg: #eaf2fb; --blue: #2563a8;
+  --green-bg: #e9f6ef; --green: #1f7a4a;
+  --amber-bg: #fdf4e3; --amber: #a3650a;
+  --red-bg: #fbecec; --red: #a83232;
+}
+
+@page { size: A4; margin: 20mm 18mm 20mm 18mm; }
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: 'Inter', 'Liberation Sans', sans-serif;
+  font-size: 9.6pt; line-height: 1.55; color: var(--ink); margin: 0;
+}
+
+/* ---------- Couverture ---------- */
+.cover {
+  height: 257mm; display: flex; flex-direction: column; justify-content: space-between;
+  page-break-after: always;
+}
+.cover .band {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, var(--teal) 100%);
+  color: #fff; padding: 28mm 14mm 18mm; border-radius: 4px;
+}
+.cover .kicker { font-size: 9pt; letter-spacing: .18em; text-transform: uppercase; opacity: .85; font-weight: 600; }
+.cover h1 { font-size: 27pt; line-height: 1.15; margin: 8mm 0 4mm; font-weight: 800; }
+.cover .subtitle { font-size: 12.5pt; opacity: .92; max-width: 150mm; }
+.cover .badges { margin-top: 10mm; }
+.cover .badge { display: inline-block; border: 1px solid rgba(255,255,255,.55); border-radius: 20px; padding: 2px 10px; font-size: 8.5pt; margin-right: 6px; }
+.cover table.meta { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+.cover table.meta td { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.cover table.meta td:first-child { width: 42mm; color: var(--muted); font-weight: 600; }
+.cover .classif { margin-top: 6mm; padding: 8px 12px; background: var(--soft); border-left: 4px solid var(--teal); font-size: 8.8pt; color: var(--muted); }
+
+/* ---------- Titres ---------- */
+h1.section {
+  font-size: 17pt; color: var(--navy); margin: 0 0 4mm; padding-bottom: 2mm;
+  border-bottom: 2.5px solid var(--teal); page-break-before: always; font-weight: 800;
+}
+h1.section .num { color: var(--teal); margin-right: 8px; }
+h2 { font-size: 12.5pt; color: var(--navy-2); margin: 7mm 0 2.5mm; font-weight: 700; page-break-after: avoid; }
+h3 { font-size: 10.5pt; color: var(--navy-2); margin: 5mm 0 2mm; font-weight: 700; page-break-after: avoid; }
+p { margin: 0 0 2.6mm; text-align: justify; }
+ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+li { margin-bottom: 1.2mm; }
+strong { color: #0e1726; }
+
+code, .mono { font-family: 'JetBrains Mono', 'DejaVu Sans Mono', monospace; font-size: 8.3pt; }
+code { background: var(--soft); border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; }
+pre {
+  font-family: 'JetBrains Mono', 'DejaVu Sans Mono', monospace; font-size: 7.9pt; line-height: 1.45;
+  background: #0f1b2d; color: #e6edf6; padding: 9px 11px; border-radius: 4px;
+  white-space: pre-wrap; word-break: break-word; margin: 0 0 3.5mm; page-break-inside: avoid;
+}
+pre .c { color: #8fa3bf; }
+pre .k { color: #7fd1c7; }
+
+/* ---------- Tableaux ---------- */
+table.t { width: 100%; border-collapse: collapse; margin: 1mm 0 4mm; font-size: 8.7pt; page-break-inside: avoid; }
+table.t th { background: var(--navy); color: #fff; text-align: left; padding: 6px 8px; font-weight: 600; }
+table.t td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.t tr:nth-child(even) td { background: #f8f9fb; }
+table.t td.c, table.t th.c { text-align: center; }
+
+/* ---------- Encadrés ---------- */
+.box { border-radius: 4px; padding: 8px 12px 6px; margin: 2mm 0 4mm; page-break-inside: avoid; border-left: 4px solid; }
+.box .ttl { font-weight: 700; font-size: 8.6pt; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 1.5mm; }
+.box p:last-child, .box ul:last-child { margin-bottom: 1mm; }
+.box.info { background: var(--blue-bg); border-color: var(--blue); } .box.info .ttl { color: var(--blue); }
+.box.key { background: var(--green-bg); border-color: var(--green); } .box.key .ttl { color: var(--green); }
+.box.warn { background: var(--amber-bg); border-color: var(--amber); } .box.warn .ttl { color: var(--amber); }
+.box.quote { background: var(--soft); border-color: var(--navy-2); font-style: italic; }
+
+/* ---------- Badges de verdict ---------- */
+.v { display: inline-block; font-size: 7.6pt; font-weight: 700; padding: 1px 7px; border-radius: 10px; white-space: nowrap; }
+.v.ok { background: var(--green-bg); color: var(--green); border: 1px solid #a9d8bd; }
+.v.mid { background: var(--amber-bg); color: var(--amber); border: 1px solid #ecc98a; }
+.v.ko { background: var(--red-bg); color: var(--red); border: 1px solid #e3a9a9; }
+.v.fix { background: var(--blue-bg); color: var(--blue); border: 1px solid #a9c6e8; }
+
+/* ---------- Chiffres clés ---------- */
+.kpis { display: flex; gap: 4mm; margin: 3mm 0 5mm; }
+.kpi { flex: 1; border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 4px; padding: 3mm; text-align: center; }
+.kpi .n { font-size: 20pt; font-weight: 800; color: var(--navy); line-height: 1.1; }
+.kpi .l { font-size: 7.8pt; color: var(--muted); }
+
+/* ---------- Fiches de test ---------- */
+.card { border: 1px solid var(--line); border-radius: 5px; margin: 0 0 5mm; overflow: hidden; }
+.card .head { background: var(--navy); color: #fff; padding: 7px 12px; display: flex; justify-content: space-between; align-items: center; }
+.card .head .id { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 9.5pt; }
+.card .head .name { font-weight: 700; font-size: 10.5pt; }
+.card .body { padding: 3mm 4mm 1mm; }
+.card table.kv { width: 100%; border-collapse: collapse; font-size: 8.6pt; margin-bottom: 3mm; }
+.card table.kv td { padding: 4px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.card table.kv td:first-child { width: 36mm; color: var(--muted); font-weight: 600; }
+
+figure { margin: 2mm 0 4.5mm; page-break-inside: avoid; text-align: center; }
+figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+figure.s img { max-width: 60%; } figure.xs img { max-width: 42%; } figure.m img { max-width: 80%; }
+figcaption { font-size: 7.9pt; color: var(--muted); margin-top: 1.5mm; }
+figcaption b { color: var(--navy-2); }
+
+.pair { display: flex; gap: 4mm; align-items: flex-start; page-break-inside: avoid; }
+.pair figure { flex: 1; }
+
+/* ---------- Sommaire ---------- */
+.toc { page-break-after: always; }
+.toc ol { list-style: none; padding: 0; margin: 0; }
+.toc li { display: flex; align-items: baseline; padding: 2.2mm 0; border-bottom: 1px dotted #c5ccd6; margin: 0; }
+.toc li .tn { width: 10mm; color: var(--teal); font-weight: 700; }
+.toc li .tt { flex: 1; }
+.toc li .tp { color: var(--muted); font-variant-numeric: tabular-nums; }
+.toc li.sub { padding-left: 10mm; font-size: 8.8pt; border-bottom: none; padding-top: 1mm; padding-bottom: 1mm; color: var(--muted); }
+
+.avoid { page-break-inside: avoid; }
+.small { font-size: 8.2pt; color: var(--muted); }
+.pb { page-break-before: always; }
+
+.results h2 { page-break-before: always; margin-top: 0; }
+.results h2:first-child { page-break-before: avoid; }
+</style></head><body><section class="toc">
+  <h1 class="section" style="page-break-before:avoid">Sommaire</h1>
+  <ol>
+    <li><span class="tn">1</span><span class="tt">Résumé</span></li>
+    <li class="sub">Ce qu'il faut retenir en une page</li>
+    <li><span class="tn">2</span><span class="tt">Contexte et notions de base</span></li>
+    <li class="sub">SOC, SIEM, agent, Sysmon, MITRE ATT&amp;CK, Atomic Red Team, règles et niveaux</li>
+    <li><span class="tn">3</span><span class="tt">Architecture du lab</span></li>
+    <li class="sub">Les machines, le réseau, le chemin des logs</li>
+    <li><span class="tn">4</span><span class="tt">Méthodologie</span></li>
+    <li class="sub">Le cycle de test, la grille de verdict, les règles du jeu</li>
+    <li><span class="tn">5</span><span class="tt">Résultats détaillés, test par test</span></li>
+    <li class="sub">5 techniques Windows, 2 tests Linux, 1 faux positif</li>
+    <li><span class="tn">6</span><span class="tt">Leçons et recommandations</span></li>
+    <li><span class="tn">7</span><span class="tt">Limites et prochaines étapes</span></li>
+    <li><span class="tn">A</span><span class="tt">Annexe A : glossaire</span></li>
+    <li><span class="tn">B</span><span class="tt">Annexe B : la règle 100100 expliquée ligne par ligne</span></li>
+    <li><span class="tn">C</span><span class="tt">Annexe C : réutiliser ce rapport comme modèle</span></li>
+  </ol>
+  <div class="box info" style="margin-top:8mm">
+    <div class="ttl">Comment lire ce rapport</div>
+    <p>Un lecteur pressé (un recruteur, un manager) lit la <strong>section 1</strong> : elle tient en une page et donne le résultat. Un lecteur technique va directement à la <strong>section 5</strong>. Si un mot vous bloque, il est défini dans la <strong>section 2</strong> ou dans le <strong>glossaire</strong> (annexe A).</p>
+    <p>Les encadrés ont toujours le même sens : <span class="v ok">vert</span> pour ce qu'il faut retenir, <span class="v mid">orange</span> pour un piège ou une limite, <span class="v fix">bleu</span> pour une explication ou un choix.</p>
+  </div>
+</section>
+
+<h1 class="section"><span class="num">1</span>Résumé</h1>
+
+<p><strong>La question posée</strong> : si un attaquant se comporte sur mes machines comme le font les vrais attaquants, est-ce que mon SIEM le voit, et est-ce qu'il le signale avec le bon niveau d'urgence ?</p>
+<p><strong>Ce qui a été fait</strong> : sur un lab isolé, j'ai rejoué 7 comportements d'attaquant connus, chacun référencé dans la matrice MITRE ATT&amp;CK. Pour chacun, j'ai regardé ce que le SIEM Wazuh remontait, puis j'ai corrigé ce qui manquait et rejoué le test pour le prouver.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="n">7</div><div class="l">comportements testés<br>(5 Windows, 2 Linux)</div></div>
+  <div class="kpi"><div class="n">5</div><div class="l">tactiques MITRE<br>couvertes</div></div>
+  <div class="kpi"><div class="n">7/7</div><div class="l">visibles dans le SIEM<br>après corrections</div></div>
+  <div class="kpi"><div class="n">2</div><div class="l">trous de détection<br>trouvés et corrigés</div></div>
+</div>
+
+<table class="t">
+  <tr><th>#</th><th>Technique MITRE</th><th>Tactique</th><th>Avant correction</th><th>Après</th></tr>
+  <tr><td>1</td><td>T1136.001 Création d'un compte local</td><td>Persistence</td><td><span class="v ok">Détecté (niv. 12)</span></td><td>Inchangé</td></tr>
+  <tr><td>2</td><td>T1053.005 Tâche planifiée</td><td>Persistence, Execution</td><td><span class="v mid">Mal qualifié (niv. 3)</span></td><td><span class="v fix">Règle 100100 (niv. 10)</span></td></tr>
+  <tr><td>3</td><td>T1547.001 Clé de registre Run</td><td>Persistence, Privilege Esc.</td><td><span class="v ok">Détecté (niv. 6)</span></td><td>Inchangé</td></tr>
+  <tr><td>4</td><td>T1003.001 Mémoire de LSASS</td><td>Credential Access</td><td><span class="v ko">Invisible au SIEM</span></td><td><span class="v fix">Canal Defender collecté</span></td></tr>
+  <tr><td>5</td><td>T1070.001 Effacement des journaux</td><td>Defense Evasion</td><td><span class="v ok">Détecté</span></td><td>Inchangé</td></tr>
+  <tr><td>L1</td><td>T1110 Force brute SSH</td><td>Credential Access</td><td><span class="v ok">Détecté</span></td><td>Inchangé</td></tr>
+  <tr><td>L2</td><td>Création de compte vue par le FIM</td><td>Persistence</td><td><span class="v ok">Détecté (niv. 7)</span></td><td>Inchangé</td></tr>
+</table>
+
+<div class="box key">
+  <div class="ttl">Les trois choses à retenir</div>
+  <ul>
+    <li><strong>La détection native de Wazuh couvre déjà beaucoup</strong> : 5 tests sur 7 étaient correctement détectés sans rien toucher.</li>
+    <li><strong>Deux trous de nature différente</strong> : une détection qui existait mais avec un niveau trop bas (corrigée par une règle personnalisée), et une source de logs qui n'était pas collectée du tout (corrigée par la configuration de l'agent).</li>
+    <li><strong>Une recherche vide ne prouve rien</strong> : plusieurs fois, l'événement existait mais la recherche était mal posée (casse, filtres restés actifs). C'est la leçon la plus utile du travail en SOC.</li>
+  </ul>
+</div>
+
+<h1 class="section"><span class="num">2</span>Contexte et notions de base</h1>
+
+<p>Cette section explique le vocabulaire nécessaire pour lire la suite. Si vous connaissez déjà ces notions, passez à la section 3.</p>
+
+<h2>2.1 Qu'est-ce qu'un SOC, et pourquoi en monter un chez soi ?</h2>
+<p>Un <strong>SOC</strong> (Security Operations Center) est l'équipe qui surveille en continu le système d'information d'une organisation pour repérer les attaques et y réagir. Son outil central est le <strong>SIEM</strong>. Monter un mini-SOC chez soi permet de faire ce que fait un analyste au quotidien : collecter des logs, lire des alertes, distinguer un vrai problème d'un faux positif, et améliorer les règles.</p>
+
+<h2>2.2 Les briques utilisées</h2>
+<table class="t">
+  <tr><th style="width:32mm">Brique</th><th>Rôle, en une phrase</th><th style="width:48mm">Analogie</th></tr>
+  <tr><td><strong>SIEM</strong> (Wazuh)</td><td>Reçoit les logs de toutes les machines, les compare à des règles et lève des alertes. Il les stocke aussi hors de portée de l'attaquant.</td><td>La salle de vidéosurveillance d'un immeuble.</td></tr>
+  <tr><td><strong>Agent</strong></td><td>Petit programme installé sur chaque machine surveillée, qui lit les journaux locaux et les envoie au SIEM.</td><td>La caméra dans chaque couloir.</td></tr>
+  <tr><td><strong>Sysmon</strong></td><td>Outil gratuit de Microsoft qui ajoute à Windows des journaux très détaillés : chaque programme lancé, avec sa ligne de commande, son parent, ses empreintes.</td><td>Une caméra haute définition à la place d'une webcam.</td></tr>
+  <tr><td><strong>MITRE ATT&amp;CK</strong></td><td>Catalogue public des comportements d'attaquants observés dans la réalité, rangés par <em>tactique</em> (le but) et <em>technique</em> (le moyen).</td><td>Le dictionnaire des modes opératoires des cambrioleurs.</td></tr>
+  <tr><td><strong>Atomic Red Team</strong></td><td>Bibliothèque de petits tests, chacun reproduisant une technique ATT&amp;CK de façon contrôlée et réversible (option <code>-Cleanup</code>).</td><td>Un exercice d'alarme incendie : on simule pour vérifier que l'alarme sonne.</td></tr>
+</table>
+
+<div class="box info">
+  <div class="ttl">Technique ATT&amp;CK ou vulnérabilité (CVE) : ne pas confondre</div>
+  <p>Une <strong>CVE</strong> est une faille dans un logiciel précis (un bug qu'on corrige avec une mise à jour). Une <strong>technique ATT&amp;CK</strong> est un comportement : créer un compte, planifier une tâche, effacer des journaux. Les tests de ce rapport n'exploitent aucune faille : ils utilisent des fonctions normales de Windows et de Linux, comme le ferait un attaquant déjà présent. C'est pour cela que la détection repose sur l'observation du comportement, pas sur un correctif.</p>
+</div>
+
+<h2>2.3 Comment une alerte naît dans Wazuh</h2>
+<p>Le chemin est toujours le même, et le comprendre explique la plupart des surprises rencontrées pendant les tests :</p>
+<ol>
+  <li><strong>Un événement se produit</strong> sur la machine (un programme est lancé, un fichier change).</li>
+  <li><strong>Il est journalisé</strong> localement, si un journal le capte : Security, Sysmon, Defender, journald…</li>
+  <li><strong>L'agent l'envoie</strong> au SIEM, à condition que ce journal figure dans sa configuration (<code>ossec.conf</code>).</li>
+  <li><strong>Le décodeur</strong> découpe le texte en champs (utilisateur, commande, fichier…).</li>
+  <li><strong>Les règles</strong> comparent ces champs à des conditions. Si une règle correspond, une <strong>alerte</strong> est créée avec un <strong>niveau</strong> de 0 à 15.</li>
+  <li><strong>Seules les alertes sont indexées</strong> et visibles dans le dashboard.</li>
+</ol>
+<div class="box warn">
+  <div class="ttl">Conséquence pratique</div>
+  <p>Si une étape manque, rien n'apparaît, sans message d'erreur. Le test 4 (LSASS) est tombé dans le trou de l'étape 3 : l'événement existait sur le poste, mais l'agent ne lisait pas ce journal.</p>
+</div>
+
+<h2>2.4 Le niveau d'une règle</h2>
+<table class="t">
+  <tr><th>Niveau</th><th>Sévérité affichée</th><th>Ce que ça veut dire pour l'analyste</th></tr>
+  <tr><td class="c">0 à 6</td><td>Faible</td><td>Information, bruit de fond. On ne regarde pas une par une.</td></tr>
+  <tr><td class="c">7 à 11</td><td>Moyenne</td><td>À examiner : changement notable (fichier système modifié, persistance probable).</td></tr>
+  <tr><td class="c">12 à 14</td><td>Haute</td><td>À traiter vite : changement de privilèges, action de l'antivirus.</td></tr>
+  <tr><td class="c">15</td><td>Critique</td><td>Urgence.</td></tr>
+</table>
+<p>Choisir un niveau est un <strong>compromis entre couverture et bruit</strong> : une règle large déclenchée cent fois par jour doit rester basse, sinon les analystes finissent par ignorer toutes les alertes. Une règle précise, donc rare, peut être plus haute.</p>
+
+<h1 class="section"><span class="num">3</span>Architecture du lab</h1>
+
+<p>Tout tourne sur un seul PC sous l'hyperviseur <strong>Proxmox</strong>. Les machines testées sont sur un réseau virtuel isolé (<code>vmbr1</code>, 10.10.10.0/24), séparé du réseau de la maison : elles sortent sur Internet par NAT, mais rien du réseau domestique ne peut les joindre directement.</p>
+
+<div class="avoid" style="margin:4mm 0 5mm">
+  <div style="border:1.5px solid var(--navy-2);border-radius:6px;padding:4mm">
+    <div style="font-weight:700;color:var(--navy);font-size:9pt;margin-bottom:3mm">Hôte Proxmox (192.168.1.15) · réseau isolé vmbr1 10.10.10.0/24 · passerelle 10.10.10.1</div>
+    <div style="display:flex;gap:4mm">
+      <div style="flex:1;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:4px;padding:3mm;font-size:8.4pt"><strong>wazuh</strong> · 10.10.10.10<br>SIEM tout-en-un : manager, indexeur, dashboard<br><span class="small">Reçoit sur 1514/TCP (logs) et 1515/TCP (inscription)</span></div>
+      <div style="flex:1;border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:4px;padding:3mm;font-size:8.4pt"><strong>win11</strong> · 10.10.10.20<br>Windows 11 Entreprise (évaluation)<br>Sysmon + agent 001 + Atomic Red Team</div>
+      <div style="flex:1;border:1px solid var(--line);border-top:4px solid var(--amber);border-radius:4px;padding:3mm;font-size:8.4pt"><strong>ubuntu-cible</strong> · 10.10.10.30<br>Ubuntu Server 24.04<br>Agent 002 (journald, FIM)</div>
+    </div>
+    <div style="text-align:center;font-size:8pt;color:var(--muted);margin-top:3mm">Agents → manager : logs chiffrés sur 1514/TCP · Administrateur → lab : tunnel SSH par l'hôte Proxmox</div>
+  </div>
+</div>
+
+<table class="t">
+  <tr><th>Machine</th><th>Rôle</th><th>Ce qu'elle apporte au test</th></tr>
+  <tr><td>wazuh</td><td>SIEM</td><td>Collecte, règles, alertes, dashboard, tags MITRE et PCI DSS</td></tr>
+  <tr><td>win11</td><td>Poste de travail cible</td><td>Journal Security, Sysmon (config SwiftOnSecurity), Defender ; c'est là qu'Atomic Red Team joue l'attaquant</td></tr>
+  <tr><td>ubuntu-cible</td><td>Serveur Linux cible</td><td>Logs SSH via journald, contrôle d'intégrité des fichiers (FIM) sur <code>/etc</code></td></tr>
+</table>
+
+<h2>3.1 Accès administrateur : le tunnel SSH</h2>
+<p>Comme le lab est isolé, on ne peut pas ouvrir le dashboard ou le Bureau à distance directement depuis le PC. On crée un <strong>tunnel SSH</strong> vers l'hôte Proxmox : un port local du PC (par exemple 13389) est relié, à travers SSH, au port 3389 de la VM Windows. Le client RDP se connecte alors à <code>localhost:13389</code>. Le nom de la machine Windows ne fonctionne pas, parce que le PC ne voit pas le réseau du lab : seul le tunnel y mène.</p>
+
+<h1 class="section"><span class="num">4</span>Méthodologie</h1>
+
+<h2>4.1 Le cycle appliqué à chaque test</h2>
+<table class="t">
+  <tr><th class="c" style="width:10mm">Étape</th><th style="width:30mm">Action</th><th>Question à laquelle elle répond</th></tr>
+  <tr><td class="c">1</td><td>Choisir</td><td>Quelle technique ATT&amp;CK, et pourquoi elle est réaliste pour cette machine ?</td></tr>
+  <tr><td class="c">2</td><td>Émuler</td><td>Lancer le test Atomic correspondant, noter l'heure exacte.</td></tr>
+  <tr><td class="c">3</td><td>Observer</td><td>Qu'est-ce qui a été journalisé sur le poste ? Qu'est-ce qui est arrivé dans le SIEM ?</td></tr>
+  <tr><td class="c">4</td><td>Qualifier</td><td>L'alerte existe-t-elle, a-t-elle le bon niveau, le bon tag MITRE, assez de contexte pour un analyste ?</td></tr>
+  <tr><td class="c">5</td><td>Corriger et rejouer</td><td>S'il y a un trou : règle ou collecte, puis on relance le même test pour prouver la correction.</td></tr>
+  <tr><td class="c">6</td><td>Nettoyer</td><td>Remettre la machine dans son état initial (<code>-Cleanup</code>, suppression du compte de test).</td></tr>
+</table>
+
+<h2>4.2 La grille de verdict</h2>
+<table class="t">
+  <tr><th style="width:42mm">Verdict</th><th>Signification</th></tr>
+  <tr><td><span class="v ok">Détecté</span></td><td>Une alerte existe, avec un niveau et un contexte suffisants pour qu'un analyste réagisse.</td></tr>
+  <tr><td><span class="v mid">Mal qualifié</span></td><td>Une alerte existe mais elle est noyée : niveau trop bas, titre générique, pas de lien avec la technique.</td></tr>
+  <tr><td><span class="v ko">Non visible</span></td><td>Rien dans le SIEM, alors que l'action a bien eu lieu.</td></tr>
+  <tr><td><span class="v fix">Corrigé</span></td><td>Le trou a été comblé et le test rejoué le prouve.</td></tr>
+</table>
+
+<h2>4.3 Règles du jeu</h2>
+<ul>
+  <li>Toutes les machines m'appartiennent et sont sur un réseau isolé ; aucun système tiers n'est touché.</li>
+  <li>Les tests Atomic sont publics, documentés et réversibles ; chaque test est nettoyé après usage.</li>
+  <li>L'antivirus Defender reste actif sur le poste, sauf une exclusion limitée au dossier d'Atomic Red Team pour pouvoir l'installer. Le test 4 montre d'ailleurs Defender en action.</li>
+  <li>On mesure d'abord la détection <strong>native</strong>, sans rien modifier, avant toute correction : sinon on ne sait pas ce que la correction apporte.</li>
+</ul>
+<h1 class="section"><span class="num">5</span>Résultats détaillés, test par test</h1><p>Chaque test suit la même structure : le <strong>test</strong> lancé, ce que les <strong>logs</strong> voient, les <strong>alertes</strong> Wazuh, puis le <strong>verdict</strong>. Le badge à côté de chaque titre rappelle le verdict. Les captures sont celles du dashboard et des terminaux pendant les tests.</p>
+<div class="results"><h2>Mise en place côté Windows </h2>
+<p>La VM Windows est sur le réseau isolé du lab : on n'y accède pas directement depuis le PC. On passe par un tunnel SSH via l'hôte Proxmox (<code>ssh -L 13389:10.10.10.20:3389 pve</code>), puis le client Bureau à distance se connecte à <code>localhost:13389</code>.</p>
+<figure><img src="../images/23-tunnel-ssh-rdp.png" style="width:528px"><figcaption><b>Figure 1</b> : Tunnel SSH vers la VM Windows</figcaption></figure>
+<p>L'agent <code>win11</code> est actif et remonte ses logs au manager.</p>
+<figure><img src="../images/01-win11-agent-actif.png" style="width:799px"><figcaption><b>Figure 2</b> : Agent win11 actif</figcaption></figure>
+<p>Sans aucune configuration, l'agent fait aussi un audit <strong>SCA</strong> contre le benchmark CIS Windows 11 (score de départ : 26 %) et de la <strong>détection de vulnérabilités</strong> sur les logiciels installés.</p>
+<figure><img src="../images/02-win11-sca-vulnerabilites.png" style="width:809px"><figcaption><b>Figure 3</b> : SCA et vulnérabilités</figcaption></figure>
+<p>Premier exemple de bruit : à chaque ouverture, PowerShell crée un fichier <code>__PSScriptPolicyTest_*</code> dans Temp (Sysmon event 11). C'est un comportement bénin, candidat à une exclusion.</p>
+<figure><img src="../images/03-bruit-sysmon11-psscriptpolicytest.png" style="width:626px"><figcaption><b>Figure 4</b> : Bruit Sysmon 11</figcaption></figure>
+<p>Vue d'ensemble en fin de session : les alertes sont classées par sévérité selon le niveau de la règle (0-6 faible, 7-11 moyen, 12-14 haut, 15+ critique), et les tactiques MITRE vues sur <code>win11</code> apparaissent dans le panneau de l'agent.</p>
+<figure><img src="../images/24-vue-ensemble-severites.png" style="width:743px"><figcaption><b>Figure 5</b> : Alertes par sévérité</figcaption></figure><figure><img src="../images/25-win11-tactiques-mitre.png" style="width:430px"><figcaption><b>Figure 6</b> : Tactiques MITRE sur win11</figcaption></figure>
+<h2>1. T1136.001 : création d'un compte administrateur local <span class="v ok">Détecté</span></h2>
+<p><strong>Test</strong> : Atomic <code>T1136.001-8</code>, qui lance <code>net user /add</code> puis <code>net localgroup administrators /add</code>. Côté attaquant, on liste d'abord les variantes disponibles (<code>-ShowDetailsBrief</code>) puis on lance la n°8 :</p>
+<figure><img src="../images/26-t1136-execution-atomic.png" style="width:559px"><figcaption><b>Figure 7</b> : Lancement du test T1136.001-8</figcaption></figure>
+<p>On vérifie sur le poste que le compte <code>T1136.001_Admin</code> existe bien (avant de le supprimer avec <code>-Cleanup</code>) :</p>
+<figure><img src="../images/27-t1136-compte-cree-net-user.png" style="width:419px"><figcaption><b>Figure 8</b> : Compte créé</figcaption></figure>
+<p><strong>Ce que les logs voient</strong> :</p>
+<ul>
+<li>journal Security : événements 4720 (compte créé) et 4732 (ajout au groupe Administrateurs) ;</li>
+<li>Sysmon : event 1, <code>net.exe</code> lancé par <code>cmd.exe</code>.</li>
+</ul>
+<p><strong>Alertes Wazuh</strong> : 3 alertes, dont une de niveau ≥ 12 (« Administrators Group Changed »). Elles sont rattachées à PCI DSS 10.2.5 et 8.1.2.</p>
+<figure><img src="../images/04-t1136-tableau-niveau12.png" style="width:855px"><figcaption><b>Figure 9</b> : Recherche 4720/4732</figcaption></figure><figure><img src="../images/05-t1136-top-alertes-pcidss.png" style="width:858px"><figcaption><b>Figure 10</b> : Top alertes et PCI DSS</figcaption></figure>
+<p>La commande elle-même est vue par Sysmon (« net.exe binary was started by a Windows cmd shell », groupe <code>sysmon_eid1_detections</code>) :</p>
+<figure><img src="../images/06-t1136-net-exe-sysmon.png" style="width:814px"><figcaption><b>Figure 11</b> : net.exe vu par Sysmon</figcaption></figure>
+<div class="box key"><div class="ttl">Verdict</div><p>Détecté nativement, avec deux sources complémentaires. Le journal Security voit le <strong>résultat</strong> (compte, groupe), Sysmon voit la <strong>commande</strong>.</p></div>
+<h2>2. T1053.005 : tâche planifiée (règle personnalisée) <span class="v fix">Corrigé : règle 100100</span></h2>
+<p><strong>Test</strong> : Atomic <code>T1053.005-2</code>, qui lance <code>SCHTASKS /Create /SC ONCE /TN spawn /TR cmd.exe</code>. La tâche « spawn » est bien créée :</p>
+<figure><img src="../images/28-t1053-execution-atomic.png" style="width:422px"><figcaption><b>Figure 12</b> : Lancement du test T1053.005-2</figcaption></figure>
+<p><strong>Ce que Sysmon voit</strong> (vérifié dans la VM avec <code>Get-WinEvent</code>) : event 1 <code>schtasks.exe</code>, avec la ligne de commande complète, le parent <code>cmd.exe</code>, le niveau d'intégrité High et les hashes.</p>
+<div class="box warn"><div class="ttl">Piège rencontré</div><p>La recherche <code>commandLine: *schtasks*</code> ne donnait rien, parce que la commande était en MAJUSCULES et que la recherche joker est sensible à la casse. Une recherche vide ne prouve pas l'absence d'un événement.</p></div>
+<figure><img src="../images/07-t1053-recherche-casse-vide.png" style="width:352px"><figcaption><b>Figure 13</b> : Recherche vide à cause de la casse</figcaption></figure>
+<p><strong>Avant</strong> : en cherchant sur <code>image: *schtasks.exe</code>, on ne trouve qu'une alerte générique, la règle 92032 « Suspicious Windows cmd shell execution », de <strong>niveau 3</strong>. Elle est noyée dans le bruit, et rien n'y indique une persistance.</p>
+<figure><img src="../images/08-t1053-avant-92032-niveau3.png" style="width:855px"><figcaption><b>Figure 14</b> : Avant : 92032 niveau 3</figcaption></figure>
+<p><strong>Correction</strong> : règle <a href="../rules/local_rules.xml"><code>100100</code></a>, de niveau 10 avec le tag MITRE T1053.005. Elle se déclenche quand <code>schtasks.exe</code> est lancé avec <code>/create</code>, sans tenir compte de la casse (<code>(?i)</code>). Sa syntaxe a été validée avec <code>wazuh-analysisd -t</code> avant de redémarrer le manager.</p>
+<p><strong>Après</strong> : on rejoue le test. Dans le même tableau, on voit les deux exécutions : celle d'avant la règle (une seule ligne 92032 niveau 3) et celle d'après, où la règle 100100 niveau 10 apparaît <strong>en plus</strong> de la 92032, avec un titre explicite et le poste concerné. La nouvelle règle n'écrase rien, elle ajoute une alerte mieux qualifiée.</p>
+<figure><img src="../images/09-t1053-apres-regle-100100.png" style="width:844px"><figcaption><b>Figure 15</b> : Après : règle 100100 niveau 10</figcaption></figure>
+<div class="box info"><div class="ttl">Pourquoi ne pas simplement monter la 92032 ?</div><p>« cmd lance un programme » arrive des centaines de fois par jour : la monter créerait des faux positifs. On ajoute plutôt une règle <strong>plus précise</strong>, donc plus rare, qu'on peut mettre plus haut.</p></div>
+<h2>3. T1547.001 : clé de registre Run <span class="v ok">Détecté</span></h2>
+<p><strong>Test</strong> : Atomic <code>T1547.001-1</code>, un <code>reg add</code> dans <code>...\CurrentVersion\Run</code>.</p>
+<figure><img src="../images/29-t1547-execution-atomic.png" style="width:242px"><figcaption><b>Figure 16</b> : Lancement du test T1547.001-1</figcaption></figure>
+<p><strong>Alerte Wazuh</strong> : règle 92302, niveau 6, « Registry entry to be executed on next logon was modified using command line application reg.exe ». Elle porte le tag MITRE T1547.001 (Persistence, Privilege Escalation).</p>
+<figure><img src="../images/10-t1547-alerte-registre-run.png" style="width:220px"><figcaption><b>Figure 17</b> : Alerte registre Run</figcaption></figure><figure><img src="../images/11-t1547-regle-92302-niveau6.png" style="width:794px"><figcaption><b>Figure 18</b> : Règle 92302 niveau 6</figcaption></figure><figure><img src="../images/12-t1547-champs-mitre.png" style="width:323px"><figcaption><b>Figure 19</b> : Champs MITRE</figcaption></figure>
+<p>En cliquant sur l'ID MITRE dans Wazuh, on ouvre la fiche de la technique : sa description, et ici les chemins de registre et dossiers de démarrage que les attaquants utilisent.</p>
+<figure><img src="../images/30-t1547-fiche-mitre.png" style="width:640px"><figcaption><b>Figure 20</b> : Fiche MITRE T1547.001</figcaption></figure>
+<div class="box key"><div class="ttl">Verdict</div><p>Détecté et bien qualifié nativement. Pas besoin de règle perso : on ne complète que là où la détection native est insuffisante.</p></div>
+<h2>4. T1003.001 : dump de la mémoire de LSASS (trou de collecte) <span class="v fix">Corrigé : collecte Defender</span></h2>
+<p><strong>Test</strong> : parmi les 14 variantes Atomic de T1003.001 (ProcDump, Mimikatz, NanoDump…), on a choisi la n°2, qui n'a besoin d'aucun outil externe.</p>
+<figure><img src="../images/31-t1003-liste-tests-atomic.png" style="width:409px"><figcaption><b>Figure 21</b> : Variantes T1003.001</figcaption></figure>
+<p>Atomic <code>T1003.001-2</code>, qui lance <code>rundll32.exe comsvcs.dll, MiniDump &lt;PID lsass&gt; lsass.dmp full</code>. Il s'agit d'un LOLBin : une DLL signée Microsoft détournée.</p>
+<p><strong>Ce qui s'est passé</strong> : « Access is denied ». Defender a bloqué la commande et l'a journalisée dans son propre canal : événement 1116 (<code>Trojan:Win32/RundllLolBin.AF</code>, Severe) puis 1117 (action Remove).</p>
+<div class="box warn"><div class="ttl">Problème</div><p>Rien dans Wazuh. L'agent ne collectait pas le canal <code>Microsoft-Windows-Windows Defender/Operational</code>.</p></div>
+<figure><img src="../images/13-t1003-canal-defender-absent.png" style="width:563px"><figcaption><b>Figure 22</b> : Avant : canal Defender absent</figcaption></figure>
+<p><strong>Correction</strong> : ajout du canal dans <code>ossec.conf</code> de l'agent (<code>&lt;localfile&gt;</code> en <code>eventchannel</code>), puis on rejoue le test.</p>
+<p><strong>Après</strong> : 2 alertes, la détection et l'action, dont une de niveau ≥ 12.</p>
+<figure><img src="../images/14-t1003-defender-apres-ajout-canal.png" style="width:678px"><figcaption><b>Figure 23</b> : Après : alertes Defender</figcaption></figure><figure><img src="../images/15-t1003-defender-descriptions.png" style="width:220px"><figcaption><b>Figure 24</b> : Descriptions Defender</figcaption></figure>
+<div class="box key"><div class="ttl">Leçon</div><p>Une prévention doit aussi remonter au SOC. Une tentative bloquée veut dire qu'un attaquant est déjà sur le poste.
+<strong>Limites restantes</strong> : la description Wazuh n'affiche pas le nom de la menace (« () »), et la config SwiftOnSecurity ne journalise pas l'event Sysmon 10 (accès à LSASS).</p></div>
+<h2>5. T1070.001 : effacement des journaux <span class="v ok">Détecté</span></h2>
+<p><strong>Test</strong> : <code>wevtutil cl Security</code>, lancé à la main parce que le fichier YAML Atomic manquait dans le téléchargement.</p>
+<p><strong>Alerte Wazuh</strong> : « The audit log was cleared » (événement 1102).</p>
+<figure><img src="../images/16-t1070-audit-log-cleared.png" style="width:346px"><figcaption><b>Figure 25</b> : Audit log cleared</figcaption></figure>
+<div class="box key"><div class="ttl">Leçon</div><p>Effacer les journaux sur le poste n'efface pas ce que le SIEM a déjà reçu. C'est une des raisons d'être d'un SIEM : centraliser les logs hors de portée de l'attaquant.</p></div>
+<h2>Bonus : qualification d'un faux positif <span class="v mid">Faux positif qualifié</span></h2>
+<p>Wazuh a signalé « Successful Remote Logon… NTLM authentication, possible pass-the-hash attack ». L'enquête montre que l'IP source est 10.10.10.1 (le bastion Proxmox, via le tunnel SSH), que le poste source est le mien, et que l'heure correspond à ma connexion RDP. C'est donc une activité d'administration légitime. En production, on documenterait l'exception ou on ajusterait la règle pour les IP d'administration connues.</p>
+<figure><img src="../images/17-faux-positif-rdp-ntlm.png" style="width:220px"><figcaption><b>Figure 26</b> : Faux positif RDP NTLM</figcaption></figure><figure><img src="../images/32-faux-positif-ip-source.png" style="width:220px"><figcaption><b>Figure 27</b> : IP source 10.10.10.1</figcaption></figure>
+<h2>Linux : <code>ubuntu-cible</code> </h2>
+<p>L'agent 002 est actif. Il lance tout seul l'audit SCA CIS Ubuntu 24.04 et lit journald (sshd, sudo).</p>
+<figure><img src="../images/18-ubuntu-agent-actif.png" style="width:667px"><figcaption><b>Figure 28</b> : Agent Ubuntu actif</figcaption></figure>
+<h3>L1. T1110 : brute force SSH <span class="v ok">Détecté</span></h3>
+<p><strong>Test</strong> : 10 connexions SSH avec des utilisateurs inexistants (<code>pirate1</code> à <code>pirate10</code>).</p>
+<p><strong>Résultat</strong> : une alerte sshd par tentative. Le panneau MITRE de l'agent affiche Credential Access : 10.</p>
+<figure><img src="../images/19-ubuntu-mitre-brute-force.png" style="width:678px"><figcaption><b>Figure 29</b> : MITRE Ubuntu</figcaption></figure>
+<h3>L2. FIM : création d'un compte vue par le contrôle d'intégrité <span class="v ok">Détecté</span></h3>
+<p><strong>Configuration</strong> : par défaut, l'agent scanne <code>/etc</code> toutes les 12 heures. On le passe en <code>realtime="yes"</code> avec <code>report_changes="yes"</code>.</p>
+<p><strong>Test</strong> : <code>useradd -m backdoor</code>, puis <code>userdel -r backdoor</code> pour nettoyer.</p>
+<p><strong>Résultat</strong> : règle 550 « Integrity checksum changed », niveau 7, 12 fois (passwd, shadow, group, gshadow, subuid, subgid et leurs sauvegardes <code>-</code>). S'y ajoutent « File added / deleted » pour les fichiers temporaires et les verrous. Chaque alerte donne le fichier, la taille, la date de modification et les hashes avant et après.</p>
+<figure><img src="../images/20-ubuntu-fim-detail-subuid.png" style="width:440px"><figcaption><b>Figure 30</b> : Détail FIM /etc/subuid-</figcaption></figure><figure><img src="../images/21-ubuntu-fim-regle-550.png" style="width:675px"><figcaption><b>Figure 31</b> : Règle 550</figcaption></figure><figure><img src="../images/22-ubuntu-fim-compteurs.png" style="width:322px"><figcaption><b>Figure 32</b> : Compteurs FIM</figcaption></figure>
+<div class="box info"><div class="ttl">Choix assumé</div><p>Le temps réel est plus réactif, mais il coûte plus de ressources et génère plus de bruit qu'un scan périodique.</p></div></div><h1 class="section"><span class="num">6</span>Leçons et recommandations</h1>
+
+<h2>6.1 Leçons techniques</h2>
+<table class="t">
+  <tr><th style="width:55mm">Constat</th><th>Leçon</th></tr>
+  <tr><td>5 tests sur 7 détectés sans rien modifier</td><td>Mesurer la détection native avant d'écrire des règles. On ne complète que là où il y a un trou, sinon on multiplie les alertes en double.</td></tr>
+  <tr><td>Tâche planifiée vue en niveau 3 seulement</td><td>Une détection peut exister et être inutile en pratique si son niveau la noie dans le bruit. La bonne correction est une règle <strong>plus précise</strong>, pas une règle générique remontée.</td></tr>
+  <tr><td>Blocage par Defender invisible pour le SIEM</td><td>Toute source de sécurité doit remonter au SOC, y compris les préventions réussies : une tentative bloquée signifie que quelqu'un est déjà sur le poste.</td></tr>
+  <tr><td>Recherches vides alors que l'événement existait</td><td>Avant de conclure « non détecté », vérifier la casse, les filtres restés actifs, la période, et se rappeler que seuls les événements qui déclenchent une règle sont indexés.</td></tr>
+  <tr><td>Journaux effacés sur le poste mais conservés dans le SIEM</td><td>C'est la raison d'être d'un SIEM : garder une copie des logs hors de portée de l'attaquant.</td></tr>
+  <tr><td>Alerte « pass-the-hash » sur ma propre connexion RDP</td><td>Un analyste qualifie avant d'escalader : IP source, poste, heure, contexte. Un faux positif connu se documente ou s'exclut précisément.</td></tr>
+</table>
+
+<h2>6.2 Recommandations pour un environnement réel</h2>
+<ol>
+  <li><strong>Collecter systématiquement</strong> les canaux de sécurité Windows au-delà de Security et Sysmon (Defender, PowerShell, tâches planifiées), et le vérifier par un test, pas seulement par la configuration.</li>
+  <li><strong>Tester chaque règle</strong> par une émulation avant et après sa mise en production, comme ici pour la règle 100100.</li>
+  <li><strong>Documenter les exclusions</strong> (administrateurs connus, bruit PowerShell) au lieu de baisser les niveaux globalement.</li>
+  <li><strong>Rejouer les tests régulièrement</strong> : une mise à jour de Wazuh, de Sysmon ou de sa configuration peut faire disparaître une détection sans prévenir.</li>
+</ol>
+
+<h1 class="section"><span class="num">7</span>Limites et prochaines étapes</h1>
+
+<h2>7.1 Limites de cet exercice</h2>
+<ul>
+  <li><strong>Peu de tests par technique</strong> : une seule variante Atomic par technique. Un attaquant réel peut obtenir le même résultat par d'autres moyens qui ne déclencheraient pas les mêmes règles.</li>
+  <li><strong>Accès à LSASS non journalisé</strong> : la configuration Sysmon utilisée n'enregistre pas l'événement 10 (accès à un processus). Sans Defender, la tentative du test 4 aurait été invisible.</li>
+  <li><strong>Nom de la menace absent</strong> dans la description des alertes Defender (« () ») : il faudrait adapter le décodeur ou la règle.</li>
+  <li><strong>Pas de visibilité réseau</strong> : toutes les détections viennent des machines elles-mêmes. Un scan ou une connexion suspecte entre machines ne serait pas vu.</li>
+  <li><strong>Lab simplifié</strong> : un seul réseau à plat, pas de domaine Active Directory, très peu de trafic normal, donc peu de bruit par rapport à une vraie entreprise.</li>
+</ul>
+
+<h2>7.2 Prochaines étapes prévues</h2>
+<table class="t">
+  <tr><th style="width:52mm">Étape</th><th>Ce qu'elle apporte</th></tr>
+  <tr><td>Suricata sur un Raspberry Pi 5</td><td>Détection réseau (IDS) : scans, connexions vers des destinations suspectes. Alertes envoyées à Wazuh.</td></tr>
+  <tr><td>Pare-feu OPNsense et VLAN</td><td>Segmenter le lab (administration, serveurs, cibles) et envoyer les logs du pare-feu au SIEM.</td></tr>
+  <tr><td>Sysmon : activer l'événement 10 sur LSASS</td><td>Voir les tentatives d'accès à la mémoire des identifiants même sans antivirus.</td></tr>
+  <tr><td>Automatisation (Ansible, Terraform)</td><td>Reconstruire le lab et redéployer les règles en une commande, et rejouer les tests automatiquement.</td></tr>
+</table>
+
+<h1 class="section"><span class="num">A</span>Annexe A : glossaire</h1>
+<table class="t">
+  <tr><th style="width:38mm">Terme</th><th>Définition</th></tr>
+  <tr><td>Agent</td><td>Programme installé sur une machine pour envoyer ses journaux au SIEM.</td></tr>
+  <tr><td>Alerte</td><td>Événement qui a déclenché une règle du SIEM ; elle porte un niveau, une description et souvent un tag MITRE.</td></tr>
+  <tr><td>Atomic Red Team</td><td>Bibliothèque open source de tests qui reproduisent chacun une technique ATT&amp;CK.</td></tr>
+  <tr><td>CVE</td><td>Identifiant public d'une vulnérabilité logicielle précise.</td></tr>
+  <tr><td>Décodeur</td><td>Partie du SIEM qui découpe un log brut en champs exploitables.</td></tr>
+  <tr><td>Faux positif</td><td>Alerte levée sur une activité légitime.</td></tr>
+  <tr><td>FIM</td><td>File Integrity Monitoring : surveillance des modifications de fichiers sensibles par comparaison d'empreintes (hash).</td></tr>
+  <tr><td>Hash</td><td>Empreinte numérique d'un fichier ; si un octet change, l'empreinte change.</td></tr>
+  <tr><td>LOLBin</td><td>« Living off the land binary » : programme légitime du système détourné par un attaquant pour ne pas apporter ses propres outils.</td></tr>
+  <tr><td>LSASS</td><td>Processus Windows qui gère l'authentification ; sa mémoire contient des secrets d'identification, d'où l'intérêt des attaquants.</td></tr>
+  <tr><td>MITRE ATT&amp;CK</td><td>Base de connaissances des tactiques et techniques d'attaquants observées dans la réalité.</td></tr>
+  <tr><td>Niveau (Wazuh)</td><td>Gravité d'une règle, de 0 à 15.</td></tr>
+  <tr><td>PCI DSS</td><td>Norme de sécurité des données de cartes bancaires ; Wazuh rattache certaines alertes à ses exigences.</td></tr>
+  <tr><td>Purple team</td><td>Exercice où l'on joue à la fois l'attaque (red) et la défense (blue) pour améliorer la détection.</td></tr>
+  <tr><td>SCA</td><td>Security Configuration Assessment : audit de configuration d'une machine par rapport à un référentiel (ici CIS).</td></tr>
+  <tr><td>SIEM</td><td>Security Information and Event Management : outil qui centralise les logs et lève des alertes.</td></tr>
+  <tr><td>Sysmon</td><td>Outil Microsoft qui ajoute des journaux détaillés à Windows (processus, fichiers, registre, réseau).</td></tr>
+  <tr><td>Tactique / technique</td><td>Dans ATT&amp;CK, la tactique est le but de l'attaquant (persister, voler des identifiants) ; la technique est le moyen.</td></tr>
+</table>
+
+<h1 class="section"><span class="num">B</span>Annexe B : la règle 100100 expliquée ligne par ligne</h1>
+<p>Fichier <code>rules/local_rules.xml</code> sur le manager Wazuh. Les règles personnalisées utilisent les identifiants à partir de 100000 pour ne jamais entrer en conflit avec celles livrées par Wazuh.</p>
+<pre><span class="k">&lt;group name="local,sysmon,persistence,"&gt;</span>
+  <span class="k">&lt;rule id="100100" level="10"&gt;</span>
+    <span class="k">&lt;if_sid&gt;</span>61603, 92032<span class="k">&lt;/if_sid&gt;</span>
+    <span class="k">&lt;field name="win.eventdata.image" type="pcre2"&gt;</span>(?i)schtasks\.exe$<span class="k">&lt;/field&gt;</span>
+    <span class="k">&lt;field name="win.eventdata.commandLine" type="pcre2"&gt;</span>(?i)/create<span class="k">&lt;/field&gt;</span>
+    <span class="k">&lt;description&gt;</span>Persistance : tache planifiee creee avec schtasks par $(win.eventdata.user)<span class="k">&lt;/description&gt;</span>
+    <span class="k">&lt;mitre&gt;&lt;id&gt;</span>T1053.005<span class="k">&lt;/id&gt;&lt;/mitre&gt;</span>
+  <span class="k">&lt;/rule&gt;</span>
+<span class="k">&lt;/group&gt;</span></pre>
+<table class="t">
+  <tr><th style="width:45mm">Élément</th><th>Rôle</th></tr>
+  <tr><td><code>group name</code></td><td>Étiquettes qui permettent de filtrer ces alertes dans le dashboard.</td></tr>
+  <tr><td><code>id="100100" level="10"</code></td><td>Identifiant unique de la règle, et niveau 10 : sévérité moyenne haute, au-dessus du bruit.</td></tr>
+  <tr><td><code>if_sid</code></td><td>La règle n'est évaluée que si l'événement a déjà déclenché la règle 61603 (création de processus Sysmon) ou 92032 (programme lancé par cmd). C'est un raffinement de règles existantes.</td></tr>
+  <tr><td><code>field … image</code></td><td>Le programme lancé doit être <code>schtasks.exe</code>. <code>(?i)</code> rend la comparaison insensible à la casse, <code>$</code> impose la fin du chemin.</td></tr>
+  <tr><td><code>field … commandLine</code></td><td>La commande doit contenir <code>/create</code> : on ne veut que les créations de tâche, pas les simples consultations.</td></tr>
+  <tr><td><code>description</code></td><td>Titre lisible de l'alerte ; <code>$(win.eventdata.user)</code> y insère l'utilisateur concerné.</td></tr>
+  <tr><td><code>mitre</code></td><td>Rattache l'alerte à la technique T1053.005 pour les tableaux de bord MITRE.</td></tr>
+</table>
+<div class="box key">
+  <div class="ttl">Bonne pratique appliquée</div>
+  <p>Avant de redémarrer le manager, la syntaxe a été vérifiée avec l'outil de test de Wazuh (<code>wazuh-analysisd -t</code>). Une erreur dans ce fichier empêche le manager de démarrer, et donc coupe toute la détection.</p>
+</div>
+
+<h1 class="section"><span class="num">C</span>Annexe C : réutiliser ce rapport comme modèle</h1>
+<p>Ce document suit la structure classique d'un rapport technique d'exercice. Pour un nouvel exercice (TP, audit, autre lab), garder le même squelette :</p>
+<table class="t">
+  <tr><th style="width:50mm">Partie</th><th>Ce qu'on y met</th><th style="width:38mm">Lecteur visé</th></tr>
+  <tr><td>Page de garde</td><td>Titre, auteur, date, version, périmètre, niveau de diffusion</td><td>Tous</td></tr>
+  <tr><td>Résumé</td><td>La question posée, ce qui a été fait, les chiffres clés, le tableau des résultats, 3 messages à retenir. Une page maximum.</td><td>Manager, recruteur</td></tr>
+  <tr><td>Contexte et notions</td><td>Le vocabulaire nécessaire pour comprendre la suite</td><td>Débutant</td></tr>
+  <tr><td>Périmètre et architecture</td><td>Les machines, le réseau, un schéma, ce qui est hors périmètre</td><td>Technique</td></tr>
+  <tr><td>Méthodologie</td><td>Les étapes suivies, la grille de verdict, les règles du jeu (autorisations, nettoyage)</td><td>Technique, auditeur</td></tr>
+  <tr><td>Résultats détaillés</td><td>Une fiche par test, toujours dans le même ordre : action, observation, preuve (capture), verdict</td><td>Technique</td></tr>
+  <tr><td>Leçons et recommandations</td><td>Ce qu'on a appris, ce qu'on conseille de faire</td><td>Tous</td></tr>
+  <tr><td>Limites et suite</td><td>Ce que le test ne prouve pas, et ce qui vient après. Être honnête ici rend le reste crédible.</td><td>Tous</td></tr>
+  <tr><td>Annexes</td><td>Glossaire, code, configurations, détails trop longs pour le corps</td><td>Technique</td></tr>
+</table>
+<div class="box info">
+  <div class="ttl">Règles de forme à garder</div>
+  <ul>
+    <li>Chaque affirmation a une preuve : une capture numérotée, une sortie de commande, un identifiant de règle.</li>
+    <li>Un verdict par test, avec une grille définie à l'avance.</li>
+    <li>Les captures ont une légende qui dit ce qu'il faut y regarder.</li>
+    <li>Jamais de mot de passe, de clé ou d'adresse publique dans un document diffusé.</li>
+    <li>Le résumé s'écrit en dernier, mais se place en premier.</li>
+  </ul>
+</div>
+<p class="small" style="margin-top:6mm">Les sources de ce document (HTML, CSS, script de génération) sont dans le dossier <code>rapport/</code> du dépôt : modifier <code>detections/README.md</code> puis relancer <code>python3 build.py</code> régénère le PDF.</p>
+</body></html>

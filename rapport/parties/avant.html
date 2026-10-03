@@ -1,0 +1,160 @@
+<section class="toc">
+  <h1 class="section" style="page-break-before:avoid">Sommaire</h1>
+  <ol>
+    <li><span class="tn">1</span><span class="tt">Résumé</span></li>
+    <li class="sub">Ce qu'il faut retenir en une page</li>
+    <li><span class="tn">2</span><span class="tt">Contexte et notions de base</span></li>
+    <li class="sub">SOC, SIEM, agent, Sysmon, MITRE ATT&amp;CK, Atomic Red Team, règles et niveaux</li>
+    <li><span class="tn">3</span><span class="tt">Architecture du lab</span></li>
+    <li class="sub">Les machines, le réseau, le chemin des logs</li>
+    <li><span class="tn">4</span><span class="tt">Méthodologie</span></li>
+    <li class="sub">Le cycle de test, la grille de verdict, les règles du jeu</li>
+    <li><span class="tn">5</span><span class="tt">Résultats détaillés, test par test</span></li>
+    <li class="sub">5 techniques Windows, 2 tests Linux, 1 faux positif</li>
+    <li><span class="tn">6</span><span class="tt">Leçons et recommandations</span></li>
+    <li><span class="tn">7</span><span class="tt">Limites et prochaines étapes</span></li>
+    <li><span class="tn">A</span><span class="tt">Annexe A : glossaire</span></li>
+    <li><span class="tn">B</span><span class="tt">Annexe B : la règle 100100 expliquée ligne par ligne</span></li>
+    <li><span class="tn">C</span><span class="tt">Annexe C : réutiliser ce rapport comme modèle</span></li>
+  </ol>
+  <div class="box info" style="margin-top:8mm">
+    <div class="ttl">Comment lire ce rapport</div>
+    <p>Un lecteur pressé (un recruteur, un manager) lit la <strong>section 1</strong> : elle tient en une page et donne le résultat. Un lecteur technique va directement à la <strong>section 5</strong>. Si un mot vous bloque, il est défini dans la <strong>section 2</strong> ou dans le <strong>glossaire</strong> (annexe A).</p>
+    <p>Les encadrés ont toujours le même sens : <span class="v ok">vert</span> pour ce qu'il faut retenir, <span class="v mid">orange</span> pour un piège ou une limite, <span class="v fix">bleu</span> pour une explication ou un choix.</p>
+  </div>
+</section>
+
+<h1 class="section"><span class="num">1</span>Résumé</h1>
+
+<p><strong>La question posée</strong> : si un attaquant se comporte sur mes machines comme le font les vrais attaquants, est-ce que mon SIEM le voit, et est-ce qu'il le signale avec le bon niveau d'urgence ?</p>
+<p><strong>Ce qui a été fait</strong> : sur un lab isolé, j'ai rejoué 7 comportements d'attaquant connus, chacun référencé dans la matrice MITRE ATT&amp;CK. Pour chacun, j'ai regardé ce que le SIEM Wazuh remontait, puis j'ai corrigé ce qui manquait et rejoué le test pour le prouver.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="n">7</div><div class="l">comportements testés<br>(5 Windows, 2 Linux)</div></div>
+  <div class="kpi"><div class="n">5</div><div class="l">tactiques MITRE<br>couvertes</div></div>
+  <div class="kpi"><div class="n">7/7</div><div class="l">visibles dans le SIEM<br>après corrections</div></div>
+  <div class="kpi"><div class="n">2</div><div class="l">trous de détection<br>trouvés et corrigés</div></div>
+</div>
+
+<table class="t">
+  <tr><th>#</th><th>Technique MITRE</th><th>Tactique</th><th>Avant correction</th><th>Après</th></tr>
+  <tr><td>1</td><td>T1136.001 Création d'un compte local</td><td>Persistence</td><td><span class="v ok">Détecté (niv. 12)</span></td><td>Inchangé</td></tr>
+  <tr><td>2</td><td>T1053.005 Tâche planifiée</td><td>Persistence, Execution</td><td><span class="v mid">Mal qualifié (niv. 3)</span></td><td><span class="v fix">Règle 100100 (niv. 10)</span></td></tr>
+  <tr><td>3</td><td>T1547.001 Clé de registre Run</td><td>Persistence, Privilege Esc.</td><td><span class="v ok">Détecté (niv. 6)</span></td><td>Inchangé</td></tr>
+  <tr><td>4</td><td>T1003.001 Mémoire de LSASS</td><td>Credential Access</td><td><span class="v ko">Invisible au SIEM</span></td><td><span class="v fix">Canal Defender collecté</span></td></tr>
+  <tr><td>5</td><td>T1070.001 Effacement des journaux</td><td>Defense Evasion</td><td><span class="v ok">Détecté</span></td><td>Inchangé</td></tr>
+  <tr><td>L1</td><td>T1110 Force brute SSH</td><td>Credential Access</td><td><span class="v ok">Détecté</span></td><td>Inchangé</td></tr>
+  <tr><td>L2</td><td>Création de compte vue par le FIM</td><td>Persistence</td><td><span class="v ok">Détecté (niv. 7)</span></td><td>Inchangé</td></tr>
+</table>
+
+<div class="box key">
+  <div class="ttl">Les trois choses à retenir</div>
+  <ul>
+    <li><strong>La détection native de Wazuh couvre déjà beaucoup</strong> : 5 tests sur 7 étaient correctement détectés sans rien toucher.</li>
+    <li><strong>Deux trous de nature différente</strong> : une détection qui existait mais avec un niveau trop bas (corrigée par une règle personnalisée), et une source de logs qui n'était pas collectée du tout (corrigée par la configuration de l'agent).</li>
+    <li><strong>Une recherche vide ne prouve rien</strong> : plusieurs fois, l'événement existait mais la recherche était mal posée (casse, filtres restés actifs). C'est la leçon la plus utile du travail en SOC.</li>
+  </ul>
+</div>
+
+<h1 class="section"><span class="num">2</span>Contexte et notions de base</h1>
+
+<p>Cette section explique le vocabulaire nécessaire pour lire la suite. Si vous connaissez déjà ces notions, passez à la section 3.</p>
+
+<h2>2.1 Qu'est-ce qu'un SOC, et pourquoi en monter un chez soi ?</h2>
+<p>Un <strong>SOC</strong> (Security Operations Center) est l'équipe qui surveille en continu le système d'information d'une organisation pour repérer les attaques et y réagir. Son outil central est le <strong>SIEM</strong>. Monter un mini-SOC chez soi permet de faire ce que fait un analyste au quotidien : collecter des logs, lire des alertes, distinguer un vrai problème d'un faux positif, et améliorer les règles.</p>
+
+<h2>2.2 Les briques utilisées</h2>
+<table class="t">
+  <tr><th style="width:32mm">Brique</th><th>Rôle, en une phrase</th><th style="width:48mm">Analogie</th></tr>
+  <tr><td><strong>SIEM</strong> (Wazuh)</td><td>Reçoit les logs de toutes les machines, les compare à des règles et lève des alertes. Il les stocke aussi hors de portée de l'attaquant.</td><td>La salle de vidéosurveillance d'un immeuble.</td></tr>
+  <tr><td><strong>Agent</strong></td><td>Petit programme installé sur chaque machine surveillée, qui lit les journaux locaux et les envoie au SIEM.</td><td>La caméra dans chaque couloir.</td></tr>
+  <tr><td><strong>Sysmon</strong></td><td>Outil gratuit de Microsoft qui ajoute à Windows des journaux très détaillés : chaque programme lancé, avec sa ligne de commande, son parent, ses empreintes.</td><td>Une caméra haute définition à la place d'une webcam.</td></tr>
+  <tr><td><strong>MITRE ATT&amp;CK</strong></td><td>Catalogue public des comportements d'attaquants observés dans la réalité, rangés par <em>tactique</em> (le but) et <em>technique</em> (le moyen).</td><td>Le dictionnaire des modes opératoires des cambrioleurs.</td></tr>
+  <tr><td><strong>Atomic Red Team</strong></td><td>Bibliothèque de petits tests, chacun reproduisant une technique ATT&amp;CK de façon contrôlée et réversible (option <code>-Cleanup</code>).</td><td>Un exercice d'alarme incendie : on simule pour vérifier que l'alarme sonne.</td></tr>
+</table>
+
+<div class="box info">
+  <div class="ttl">Technique ATT&amp;CK ou vulnérabilité (CVE) : ne pas confondre</div>
+  <p>Une <strong>CVE</strong> est une faille dans un logiciel précis (un bug qu'on corrige avec une mise à jour). Une <strong>technique ATT&amp;CK</strong> est un comportement : créer un compte, planifier une tâche, effacer des journaux. Les tests de ce rapport n'exploitent aucune faille : ils utilisent des fonctions normales de Windows et de Linux, comme le ferait un attaquant déjà présent. C'est pour cela que la détection repose sur l'observation du comportement, pas sur un correctif.</p>
+</div>
+
+<h2>2.3 Comment une alerte naît dans Wazuh</h2>
+<p>Le chemin est toujours le même, et le comprendre explique la plupart des surprises rencontrées pendant les tests :</p>
+<ol>
+  <li><strong>Un événement se produit</strong> sur la machine (un programme est lancé, un fichier change).</li>
+  <li><strong>Il est journalisé</strong> localement, si un journal le capte : Security, Sysmon, Defender, journald…</li>
+  <li><strong>L'agent l'envoie</strong> au SIEM, à condition que ce journal figure dans sa configuration (<code>ossec.conf</code>).</li>
+  <li><strong>Le décodeur</strong> découpe le texte en champs (utilisateur, commande, fichier…).</li>
+  <li><strong>Les règles</strong> comparent ces champs à des conditions. Si une règle correspond, une <strong>alerte</strong> est créée avec un <strong>niveau</strong> de 0 à 15.</li>
+  <li><strong>Seules les alertes sont indexées</strong> et visibles dans le dashboard.</li>
+</ol>
+<div class="box warn">
+  <div class="ttl">Conséquence pratique</div>
+  <p>Si une étape manque, rien n'apparaît, sans message d'erreur. Le test 4 (LSASS) est tombé dans le trou de l'étape 3 : l'événement existait sur le poste, mais l'agent ne lisait pas ce journal.</p>
+</div>
+
+<h2>2.4 Le niveau d'une règle</h2>
+<table class="t">
+  <tr><th>Niveau</th><th>Sévérité affichée</th><th>Ce que ça veut dire pour l'analyste</th></tr>
+  <tr><td class="c">0 à 6</td><td>Faible</td><td>Information, bruit de fond. On ne regarde pas une par une.</td></tr>
+  <tr><td class="c">7 à 11</td><td>Moyenne</td><td>À examiner : changement notable (fichier système modifié, persistance probable).</td></tr>
+  <tr><td class="c">12 à 14</td><td>Haute</td><td>À traiter vite : changement de privilèges, action de l'antivirus.</td></tr>
+  <tr><td class="c">15</td><td>Critique</td><td>Urgence.</td></tr>
+</table>
+<p>Choisir un niveau est un <strong>compromis entre couverture et bruit</strong> : une règle large déclenchée cent fois par jour doit rester basse, sinon les analystes finissent par ignorer toutes les alertes. Une règle précise, donc rare, peut être plus haute.</p>
+
+<h1 class="section"><span class="num">3</span>Architecture du lab</h1>
+
+<p>Tout tourne sur un seul PC sous l'hyperviseur <strong>Proxmox</strong>. Les machines testées sont sur un réseau virtuel isolé (<code>vmbr1</code>, 10.10.10.0/24), séparé du réseau de la maison : elles sortent sur Internet par NAT, mais rien du réseau domestique ne peut les joindre directement.</p>
+
+<div class="avoid" style="margin:4mm 0 5mm">
+  <div style="border:1.5px solid var(--navy-2);border-radius:6px;padding:4mm">
+    <div style="font-weight:700;color:var(--navy);font-size:9pt;margin-bottom:3mm">Hôte Proxmox (192.168.1.15) · réseau isolé vmbr1 10.10.10.0/24 · passerelle 10.10.10.1</div>
+    <div style="display:flex;gap:4mm">
+      <div style="flex:1;border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:4px;padding:3mm;font-size:8.4pt"><strong>wazuh</strong> · 10.10.10.10<br>SIEM tout-en-un : manager, indexeur, dashboard<br><span class="small">Reçoit sur 1514/TCP (logs) et 1515/TCP (inscription)</span></div>
+      <div style="flex:1;border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:4px;padding:3mm;font-size:8.4pt"><strong>win11</strong> · 10.10.10.20<br>Windows 11 Entreprise (évaluation)<br>Sysmon + agent 001 + Atomic Red Team</div>
+      <div style="flex:1;border:1px solid var(--line);border-top:4px solid var(--amber);border-radius:4px;padding:3mm;font-size:8.4pt"><strong>ubuntu-cible</strong> · 10.10.10.30<br>Ubuntu Server 24.04<br>Agent 002 (journald, FIM)</div>
+    </div>
+    <div style="text-align:center;font-size:8pt;color:var(--muted);margin-top:3mm">Agents → manager : logs chiffrés sur 1514/TCP · Administrateur → lab : tunnel SSH par l'hôte Proxmox</div>
+  </div>
+</div>
+
+<table class="t">
+  <tr><th>Machine</th><th>Rôle</th><th>Ce qu'elle apporte au test</th></tr>
+  <tr><td>wazuh</td><td>SIEM</td><td>Collecte, règles, alertes, dashboard, tags MITRE et PCI DSS</td></tr>
+  <tr><td>win11</td><td>Poste de travail cible</td><td>Journal Security, Sysmon (config SwiftOnSecurity), Defender ; c'est là qu'Atomic Red Team joue l'attaquant</td></tr>
+  <tr><td>ubuntu-cible</td><td>Serveur Linux cible</td><td>Logs SSH via journald, contrôle d'intégrité des fichiers (FIM) sur <code>/etc</code></td></tr>
+</table>
+
+<h2>3.1 Accès administrateur : le tunnel SSH</h2>
+<p>Comme le lab est isolé, on ne peut pas ouvrir le dashboard ou le Bureau à distance directement depuis le PC. On crée un <strong>tunnel SSH</strong> vers l'hôte Proxmox : un port local du PC (par exemple 13389) est relié, à travers SSH, au port 3389 de la VM Windows. Le client RDP se connecte alors à <code>localhost:13389</code>. Le nom de la machine Windows ne fonctionne pas, parce que le PC ne voit pas le réseau du lab : seul le tunnel y mène.</p>
+
+<h1 class="section"><span class="num">4</span>Méthodologie</h1>
+
+<h2>4.1 Le cycle appliqué à chaque test</h2>
+<table class="t">
+  <tr><th class="c" style="width:10mm">Étape</th><th style="width:30mm">Action</th><th>Question à laquelle elle répond</th></tr>
+  <tr><td class="c">1</td><td>Choisir</td><td>Quelle technique ATT&amp;CK, et pourquoi elle est réaliste pour cette machine ?</td></tr>
+  <tr><td class="c">2</td><td>Émuler</td><td>Lancer le test Atomic correspondant, noter l'heure exacte.</td></tr>
+  <tr><td class="c">3</td><td>Observer</td><td>Qu'est-ce qui a été journalisé sur le poste ? Qu'est-ce qui est arrivé dans le SIEM ?</td></tr>
+  <tr><td class="c">4</td><td>Qualifier</td><td>L'alerte existe-t-elle, a-t-elle le bon niveau, le bon tag MITRE, assez de contexte pour un analyste ?</td></tr>
+  <tr><td class="c">5</td><td>Corriger et rejouer</td><td>S'il y a un trou : règle ou collecte, puis on relance le même test pour prouver la correction.</td></tr>
+  <tr><td class="c">6</td><td>Nettoyer</td><td>Remettre la machine dans son état initial (<code>-Cleanup</code>, suppression du compte de test).</td></tr>
+</table>
+
+<h2>4.2 La grille de verdict</h2>
+<table class="t">
+  <tr><th style="width:42mm">Verdict</th><th>Signification</th></tr>
+  <tr><td><span class="v ok">Détecté</span></td><td>Une alerte existe, avec un niveau et un contexte suffisants pour qu'un analyste réagisse.</td></tr>
+  <tr><td><span class="v mid">Mal qualifié</span></td><td>Une alerte existe mais elle est noyée : niveau trop bas, titre générique, pas de lien avec la technique.</td></tr>
+  <tr><td><span class="v ko">Non visible</span></td><td>Rien dans le SIEM, alors que l'action a bien eu lieu.</td></tr>
+  <tr><td><span class="v fix">Corrigé</span></td><td>Le trou a été comblé et le test rejoué le prouve.</td></tr>
+</table>
+
+<h2>4.3 Règles du jeu</h2>
+<ul>
+  <li>Toutes les machines m'appartiennent et sont sur un réseau isolé ; aucun système tiers n'est touché.</li>
+  <li>Les tests Atomic sont publics, documentés et réversibles ; chaque test est nettoyé après usage.</li>
+  <li>L'antivirus Defender reste actif sur le poste, sauf une exclusion limitée au dossier d'Atomic Red Team pour pouvoir l'installer. Le test 4 montre d'ailleurs Defender en action.</li>
+  <li>On mesure d'abord la détection <strong>native</strong>, sans rien modifier, avant toute correction : sinon on ne sait pas ce que la correction apporte.</li>
+</ul>

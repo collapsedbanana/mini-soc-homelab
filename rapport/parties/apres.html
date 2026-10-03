@@ -1,0 +1,115 @@
+<h1 class="section"><span class="num">6</span>Leçons et recommandations</h1>
+
+<h2>6.1 Leçons techniques</h2>
+<table class="t">
+  <tr><th style="width:55mm">Constat</th><th>Leçon</th></tr>
+  <tr><td>5 tests sur 7 détectés sans rien modifier</td><td>Mesurer la détection native avant d'écrire des règles. On ne complète que là où il y a un trou, sinon on multiplie les alertes en double.</td></tr>
+  <tr><td>Tâche planifiée vue en niveau 3 seulement</td><td>Une détection peut exister et être inutile en pratique si son niveau la noie dans le bruit. La bonne correction est une règle <strong>plus précise</strong>, pas une règle générique remontée.</td></tr>
+  <tr><td>Blocage par Defender invisible pour le SIEM</td><td>Toute source de sécurité doit remonter au SOC, y compris les préventions réussies : une tentative bloquée signifie que quelqu'un est déjà sur le poste.</td></tr>
+  <tr><td>Recherches vides alors que l'événement existait</td><td>Avant de conclure « non détecté », vérifier la casse, les filtres restés actifs, la période, et se rappeler que seuls les événements qui déclenchent une règle sont indexés.</td></tr>
+  <tr><td>Journaux effacés sur le poste mais conservés dans le SIEM</td><td>C'est la raison d'être d'un SIEM : garder une copie des logs hors de portée de l'attaquant.</td></tr>
+  <tr><td>Alerte « pass-the-hash » sur ma propre connexion RDP</td><td>Un analyste qualifie avant d'escalader : IP source, poste, heure, contexte. Un faux positif connu se documente ou s'exclut précisément.</td></tr>
+</table>
+
+<h2>6.2 Recommandations pour un environnement réel</h2>
+<ol>
+  <li><strong>Collecter systématiquement</strong> les canaux de sécurité Windows au-delà de Security et Sysmon (Defender, PowerShell, tâches planifiées), et le vérifier par un test, pas seulement par la configuration.</li>
+  <li><strong>Tester chaque règle</strong> par une émulation avant et après sa mise en production, comme ici pour la règle 100100.</li>
+  <li><strong>Documenter les exclusions</strong> (administrateurs connus, bruit PowerShell) au lieu de baisser les niveaux globalement.</li>
+  <li><strong>Rejouer les tests régulièrement</strong> : une mise à jour de Wazuh, de Sysmon ou de sa configuration peut faire disparaître une détection sans prévenir.</li>
+</ol>
+
+<h1 class="section"><span class="num">7</span>Limites et prochaines étapes</h1>
+
+<h2>7.1 Limites de cet exercice</h2>
+<ul>
+  <li><strong>Peu de tests par technique</strong> : une seule variante Atomic par technique. Un attaquant réel peut obtenir le même résultat par d'autres moyens qui ne déclencheraient pas les mêmes règles.</li>
+  <li><strong>Accès à LSASS non journalisé</strong> : la configuration Sysmon utilisée n'enregistre pas l'événement 10 (accès à un processus). Sans Defender, la tentative du test 4 aurait été invisible.</li>
+  <li><strong>Nom de la menace absent</strong> dans la description des alertes Defender (« () ») : il faudrait adapter le décodeur ou la règle.</li>
+  <li><strong>Pas de visibilité réseau</strong> : toutes les détections viennent des machines elles-mêmes. Un scan ou une connexion suspecte entre machines ne serait pas vu.</li>
+  <li><strong>Lab simplifié</strong> : un seul réseau à plat, pas de domaine Active Directory, très peu de trafic normal, donc peu de bruit par rapport à une vraie entreprise.</li>
+</ul>
+
+<h2>7.2 Prochaines étapes prévues</h2>
+<table class="t">
+  <tr><th style="width:52mm">Étape</th><th>Ce qu'elle apporte</th></tr>
+  <tr><td>Suricata sur un Raspberry Pi 5</td><td>Détection réseau (IDS) : scans, connexions vers des destinations suspectes. Alertes envoyées à Wazuh.</td></tr>
+  <tr><td>Pare-feu OPNsense et VLAN</td><td>Segmenter le lab (administration, serveurs, cibles) et envoyer les logs du pare-feu au SIEM.</td></tr>
+  <tr><td>Sysmon : activer l'événement 10 sur LSASS</td><td>Voir les tentatives d'accès à la mémoire des identifiants même sans antivirus.</td></tr>
+  <tr><td>Automatisation (Ansible, Terraform)</td><td>Reconstruire le lab et redéployer les règles en une commande, et rejouer les tests automatiquement.</td></tr>
+</table>
+
+<h1 class="section"><span class="num">A</span>Annexe A : glossaire</h1>
+<table class="t">
+  <tr><th style="width:38mm">Terme</th><th>Définition</th></tr>
+  <tr><td>Agent</td><td>Programme installé sur une machine pour envoyer ses journaux au SIEM.</td></tr>
+  <tr><td>Alerte</td><td>Événement qui a déclenché une règle du SIEM ; elle porte un niveau, une description et souvent un tag MITRE.</td></tr>
+  <tr><td>Atomic Red Team</td><td>Bibliothèque open source de tests qui reproduisent chacun une technique ATT&amp;CK.</td></tr>
+  <tr><td>CVE</td><td>Identifiant public d'une vulnérabilité logicielle précise.</td></tr>
+  <tr><td>Décodeur</td><td>Partie du SIEM qui découpe un log brut en champs exploitables.</td></tr>
+  <tr><td>Faux positif</td><td>Alerte levée sur une activité légitime.</td></tr>
+  <tr><td>FIM</td><td>File Integrity Monitoring : surveillance des modifications de fichiers sensibles par comparaison d'empreintes (hash).</td></tr>
+  <tr><td>Hash</td><td>Empreinte numérique d'un fichier ; si un octet change, l'empreinte change.</td></tr>
+  <tr><td>LOLBin</td><td>« Living off the land binary » : programme légitime du système détourné par un attaquant pour ne pas apporter ses propres outils.</td></tr>
+  <tr><td>LSASS</td><td>Processus Windows qui gère l'authentification ; sa mémoire contient des secrets d'identification, d'où l'intérêt des attaquants.</td></tr>
+  <tr><td>MITRE ATT&amp;CK</td><td>Base de connaissances des tactiques et techniques d'attaquants observées dans la réalité.</td></tr>
+  <tr><td>Niveau (Wazuh)</td><td>Gravité d'une règle, de 0 à 15.</td></tr>
+  <tr><td>PCI DSS</td><td>Norme de sécurité des données de cartes bancaires ; Wazuh rattache certaines alertes à ses exigences.</td></tr>
+  <tr><td>Purple team</td><td>Exercice où l'on joue à la fois l'attaque (red) et la défense (blue) pour améliorer la détection.</td></tr>
+  <tr><td>SCA</td><td>Security Configuration Assessment : audit de configuration d'une machine par rapport à un référentiel (ici CIS).</td></tr>
+  <tr><td>SIEM</td><td>Security Information and Event Management : outil qui centralise les logs et lève des alertes.</td></tr>
+  <tr><td>Sysmon</td><td>Outil Microsoft qui ajoute des journaux détaillés à Windows (processus, fichiers, registre, réseau).</td></tr>
+  <tr><td>Tactique / technique</td><td>Dans ATT&amp;CK, la tactique est le but de l'attaquant (persister, voler des identifiants) ; la technique est le moyen.</td></tr>
+</table>
+
+<h1 class="section"><span class="num">B</span>Annexe B : la règle 100100 expliquée ligne par ligne</h1>
+<p>Fichier <code>rules/local_rules.xml</code> sur le manager Wazuh. Les règles personnalisées utilisent les identifiants à partir de 100000 pour ne jamais entrer en conflit avec celles livrées par Wazuh.</p>
+<pre><span class="k">&lt;group name="local,sysmon,persistence,"&gt;</span>
+  <span class="k">&lt;rule id="100100" level="10"&gt;</span>
+    <span class="k">&lt;if_sid&gt;</span>61603, 92032<span class="k">&lt;/if_sid&gt;</span>
+    <span class="k">&lt;field name="win.eventdata.image" type="pcre2"&gt;</span>(?i)schtasks\.exe$<span class="k">&lt;/field&gt;</span>
+    <span class="k">&lt;field name="win.eventdata.commandLine" type="pcre2"&gt;</span>(?i)/create<span class="k">&lt;/field&gt;</span>
+    <span class="k">&lt;description&gt;</span>Persistance : tache planifiee creee avec schtasks par $(win.eventdata.user)<span class="k">&lt;/description&gt;</span>
+    <span class="k">&lt;mitre&gt;&lt;id&gt;</span>T1053.005<span class="k">&lt;/id&gt;&lt;/mitre&gt;</span>
+  <span class="k">&lt;/rule&gt;</span>
+<span class="k">&lt;/group&gt;</span></pre>
+<table class="t">
+  <tr><th style="width:45mm">Élément</th><th>Rôle</th></tr>
+  <tr><td><code>group name</code></td><td>Étiquettes qui permettent de filtrer ces alertes dans le dashboard.</td></tr>
+  <tr><td><code>id="100100" level="10"</code></td><td>Identifiant unique de la règle, et niveau 10 : sévérité moyenne haute, au-dessus du bruit.</td></tr>
+  <tr><td><code>if_sid</code></td><td>La règle n'est évaluée que si l'événement a déjà déclenché la règle 61603 (création de processus Sysmon) ou 92032 (programme lancé par cmd). C'est un raffinement de règles existantes.</td></tr>
+  <tr><td><code>field … image</code></td><td>Le programme lancé doit être <code>schtasks.exe</code>. <code>(?i)</code> rend la comparaison insensible à la casse, <code>$</code> impose la fin du chemin.</td></tr>
+  <tr><td><code>field … commandLine</code></td><td>La commande doit contenir <code>/create</code> : on ne veut que les créations de tâche, pas les simples consultations.</td></tr>
+  <tr><td><code>description</code></td><td>Titre lisible de l'alerte ; <code>$(win.eventdata.user)</code> y insère l'utilisateur concerné.</td></tr>
+  <tr><td><code>mitre</code></td><td>Rattache l'alerte à la technique T1053.005 pour les tableaux de bord MITRE.</td></tr>
+</table>
+<div class="box key">
+  <div class="ttl">Bonne pratique appliquée</div>
+  <p>Avant de redémarrer le manager, la syntaxe a été vérifiée avec l'outil de test de Wazuh (<code>wazuh-analysisd -t</code>). Une erreur dans ce fichier empêche le manager de démarrer, et donc coupe toute la détection.</p>
+</div>
+
+<h1 class="section"><span class="num">C</span>Annexe C : réutiliser ce rapport comme modèle</h1>
+<p>Ce document suit la structure classique d'un rapport technique d'exercice. Pour un nouvel exercice (TP, audit, autre lab), garder le même squelette :</p>
+<table class="t">
+  <tr><th style="width:50mm">Partie</th><th>Ce qu'on y met</th><th style="width:38mm">Lecteur visé</th></tr>
+  <tr><td>Page de garde</td><td>Titre, auteur, date, version, périmètre, niveau de diffusion</td><td>Tous</td></tr>
+  <tr><td>Résumé</td><td>La question posée, ce qui a été fait, les chiffres clés, le tableau des résultats, 3 messages à retenir. Une page maximum.</td><td>Manager, recruteur</td></tr>
+  <tr><td>Contexte et notions</td><td>Le vocabulaire nécessaire pour comprendre la suite</td><td>Débutant</td></tr>
+  <tr><td>Périmètre et architecture</td><td>Les machines, le réseau, un schéma, ce qui est hors périmètre</td><td>Technique</td></tr>
+  <tr><td>Méthodologie</td><td>Les étapes suivies, la grille de verdict, les règles du jeu (autorisations, nettoyage)</td><td>Technique, auditeur</td></tr>
+  <tr><td>Résultats détaillés</td><td>Une fiche par test, toujours dans le même ordre : action, observation, preuve (capture), verdict</td><td>Technique</td></tr>
+  <tr><td>Leçons et recommandations</td><td>Ce qu'on a appris, ce qu'on conseille de faire</td><td>Tous</td></tr>
+  <tr><td>Limites et suite</td><td>Ce que le test ne prouve pas, et ce qui vient après. Être honnête ici rend le reste crédible.</td><td>Tous</td></tr>
+  <tr><td>Annexes</td><td>Glossaire, code, configurations, détails trop longs pour le corps</td><td>Technique</td></tr>
+</table>
+<div class="box info">
+  <div class="ttl">Règles de forme à garder</div>
+  <ul>
+    <li>Chaque affirmation a une preuve : une capture numérotée, une sortie de commande, un identifiant de règle.</li>
+    <li>Un verdict par test, avec une grille définie à l'avance.</li>
+    <li>Les captures ont une légende qui dit ce qu'il faut y regarder.</li>
+    <li>Jamais de mot de passe, de clé ou d'adresse publique dans un document diffusé.</li>
+    <li>Le résumé s'écrit en dernier, mais se place en premier.</li>
+  </ul>
+</div>
+<p class="small" style="margin-top:6mm">Les sources de ce document (HTML, CSS, script de génération) sont dans le dossier <code>rapport/</code> du dépôt : modifier <code>detections/README.md</code> puis relancer <code>python3 build.py</code> régénère le PDF.</p>
